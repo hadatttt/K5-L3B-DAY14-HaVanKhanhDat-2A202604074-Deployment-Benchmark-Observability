@@ -142,7 +142,8 @@ nginx-1 | 172.20.0.1 - - [26/Nov/2026:08:13:28 +0000] "POST /ask HTTP/1.1" 200 9
 ### Exercise 3.2: Render deployment (agent Part 6 — nền tảng chính)
 
 - Nền tảng: **Render**, Blueprint `render.yaml` (gốc repo, trỏ `rootDir: 06-lab-complete`) gồm web service Docker + Key Value (Redis)
-- URL: PART3_URL_PLACEHOLDER
+- URL: https://production-ai-agent-cp8l.onrender.com (xem [DEPLOYMENT.md](DEPLOYMENT.md))
+- Kiểm tra CP6 trên URL public: `/health` 200, `/ready` 200, `/ask` không key 401, có key 200; 12 request liên tiếp → 429 sau 10 request/phút
 - Screenshot: [dashboard](screenshots/dashboard.png) · [running](screenshots/running.png) · [test](screenshots/test.png)
 - Chi tiết lệnh và biến môi trường: [DEPLOYMENT.md](DEPLOYMENT.md)
 
@@ -275,7 +276,58 @@ Request đang chạy vẫn trả 200, process thoát với code 0. Cơ chế: uv
 
 ### Exercise 5.4 & 5.5: Load balancing + test stateless
 
-PART5_LB_PLACEHOLDER
+Trong `05-scaling-reliability/production/`:
+`docker compose -p k5-day14-scaling up -d --build --scale agent=3` rồi `python test_stateless.py`.
+
+```text
+k5-day14-scaling-agent-1   Up (health: starting)   8000/tcp
+k5-day14-scaling-agent-2   Up (health: starting)   8000/tcp
+k5-day14-scaling-agent-3   Up (health: starting)   8000/tcp
+k5-day14-scaling-nginx-1   Up                      0.0.0.0:8080->80/tcp
+k5-day14-scaling-redis-1   Up (healthy)            6379/tcp
+
+# 6 request /health qua Nginx, header X-Served-By
+X-Served-By: 172.19.0.4:8000
+X-Served-By: 172.19.0.3:8000
+X-Served-By: 172.19.0.4:8000
+X-Served-By: 172.19.0.3:8000   (round-robin luân phiên)
+...
+```
+
+Output `test_stateless.py`:
+
+```text
+Session ID: 3ec70e09-dc58-4731-b5ac-a9f12b3895a8
+Request 1: [instance-4d5cef]  Q: What is Docker?
+Request 2: [instance-6052cd]  Q: Why do we need containers?
+Request 3: [instance-4d5cef]  Q: What is Kubernetes?
+Request 4: [instance-6052cd]  Q: How does load balancing work?
+Request 5: [instance-4d5cef]  Q: What is Redis used for?
+Total requests: 5
+Instances used: {'instance-4d5cef', 'instance-6052cd'}
+✅ All requests served despite different instances!
+--- Conversation History ---
+Total messages: 10
+✅ Session history preserved across all instances via Redis!
+
+$ redis-cli --scan --pattern 'session:*'
+session:3ec70e09-dc58-4731-b5ac-a9f12b3895a8
+```
+
+**Giải thích:**
+- Nginx (upstream `agent_cluster`, round-robin) chia request luân phiên cho các instance; 5 câu của **cùng một session** rơi vào 2 instance khác nhau nhưng lịch sử vẫn đủ **10 message** (5 hỏi + 5 đáp), vì mỗi instance đọc/ghi session ở Redis (`session:<id>`) chứ không giữ trong RAM. Nếu lưu trong RAM, instance thứ hai sẽ không thấy các lượt trước.
+- Chỉ thấy 2 trong 3 instance trả lời: lúc chạy test cả 3 agent vừa khởi động (`health: starting`) và Nginx chỉ phân giải `agent` lúc nó start, nên mới thấy 2 địa chỉ. Đây là hạn chế của Nginx open-source khi dùng `server agent:8000` không có `resolve`; stack ở Part 7 dùng `resolve` để tự cập nhật.
+- Script không tự tắt instance nào, nên mình thử thêm: tạo session mới, `docker stop k5-day14-scaling-agent-1`, rồi gửi tiếp 3 câu cùng `session_id`:
+
+```text
+stopped agent-1
+turn 3 served_by instance-4d5cef storage redis
+turn 4 served_by instance-4d5cef storage redis
+turn 5 served_by instance-4d5cef storage redis
+history messages: 8
+```
+
+Instance còn lại tiếp tục cuộc hội thoại, lịch sử không mất (`storage: redis`). Nginx có `proxy_next_upstream error timeout http_503` nên request tới instance chết được chuyển sang instance khác, người dùng không thấy lỗi.
 
 ---
 

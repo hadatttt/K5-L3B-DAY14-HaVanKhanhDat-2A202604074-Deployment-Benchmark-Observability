@@ -2,7 +2,7 @@
 
 ## Public URL
 
-RENDER_URL_PLACEHOLDER
+https://production-ai-agent-cp8l.onrender.com
 
 ## Platform
 
@@ -18,7 +18,7 @@ RENDER_URL_PLACEHOLDER
 Đặt biến trước khi chạy (key lấy trong Render Dashboard → service `production-ai-agent` → Environment → `AGENT_API_KEY`, không ghi vào repo):
 
 ```bash
-BASE=RENDER_URL_PLACEHOLDER
+BASE=https://production-ai-agent-cp8l.onrender.com
 AGENT_API_KEY=<key trên Render>
 ```
 
@@ -31,11 +31,25 @@ curl -sS -o /dev/null -w '%{http_code}\n' -X POST "$BASE/ask" -H 'Content-Type: 
 curl -sS -o /dev/null -w '%{http_code}\n' -X POST "$BASE/ask" -H 'Content-Type: application/json' -H "X-API-Key: $AGENT_API_KEY" -d '{"question":"Hello"}'   # 200
 ```
 
-Kết quả:
+Kết quả chạy ngày 2026-11-26 (ảnh: [screenshots/test.png](screenshots/test.png)):
 
 ```text
-CP6_RESULT_PLACEHOLDER
+$ BASE=https://production-ai-agent-cp8l.onrender.com
+$ curl ... $BASE/health
+200
+$ curl ... $BASE/ready
+200
+$ curl ... POST /ask (không key)
+401
+$ curl ... POST /ask -H "X-API-Key: $AGENT_API_KEY"
+200
+$ curl ... POST /ask có key (body)
+{"question":"What is deployment?","answer":"Deployment là quá trình đưa code từ máy bạn lên server để người khác dùng được."}
+$ rate limit: 12 request liên tiếp (RATE_LIMIT_PER_MINUTE=10)
+200 200 200 200 200 200 200 200 429 429 429 429
 ```
+
+Rate limit: 2 request có key ở trên đã tính vào cửa sổ 60 giây, nên vòng 12 request chỉ còn 8 lượt 200 rồi chuyển 429 (tổng 10 request/phút). State nằm trong Render Key Value (Redis) nên dùng chung khi service restart hoặc scale.
 
 ### Health Check
 

@@ -1,0 +1,534 @@
+{
+  "snapshots": {
+    "baseline": {
+      "rps": [
+        [
+          "",
+          6.27482
+        ]
+      ],
+      "err_rate": [
+        [
+          "",
+          0.00903
+        ]
+      ],
+      "p95_s": [
+        [
+          "",
+          0.29292
+        ]
+      ],
+      "avg_s": [
+        [
+          "",
+          0.22822
+        ]
+      ],
+      "cost_per_h": [
+        [
+          "",
+          1.45256
+        ]
+      ],
+      "tokens_s": [
+        [
+          "input",
+          494.05455
+        ],
+        [
+          "output",
+          264.63636
+        ]
+      ],
+      "rps_by_instance": [
+        [
+          "172.19.0.7:8000",
+          2.05455
+        ],
+        [
+          "172.19.0.6:8000",
+          2.14755
+        ],
+        [
+          "172.19.0.9:8000",
+          2.07273
+        ]
+      ],
+      "up": [
+        [
+          "172.19.0.7:8000",
+          1.0
+        ],
+        [
+          "172.19.0.6:8000",
+          1.0
+        ],
+        [
+          "172.19.0.9:8000",
+          1.0
+        ]
+      ]
+    },
+    "A": {
+      "rps": [
+        [
+          "",
+          6.4
+        ]
+      ],
+      "err_rate": [
+        [
+          "",
+          0.23011
+        ]
+      ],
+      "p95_s": [
+        [
+          "",
+          0.29108
+        ]
+      ],
+      "avg_s": [
+        [
+          "",
+          0.20636
+        ]
+      ],
+      "cost_per_h": [
+        [
+          "",
+          1.01873
+        ]
+      ],
+      "tokens_s": [
+        [
+          "input",
+          392.03636
+        ],
+        [
+          "output",
+          209.65455
+        ]
+      ],
+      "rps_by_instance": [
+        [
+          "172.19.0.7:8000",
+          2.14545
+        ],
+        [
+          "172.19.0.6:8000",
+          2.16364
+        ],
+        [
+          "172.19.0.9:8000",
+          2.09091
+        ]
+      ],
+      "up": [
+        [
+          "172.19.0.7:8000",
+          1.0
+        ],
+        [
+          "172.19.0.6:8000",
+          1.0
+        ],
+        [
+          "172.19.0.9:8000",
+          1.0
+        ]
+      ]
+    },
+    "C": {
+      "rps": [
+        [
+          "",
+          5.34545
+        ]
+      ],
+      "err_rate": [
+        [
+          "",
+          0.0102
+        ]
+      ],
+      "p95_s": [
+        [
+          "",
+          0.74079
+        ]
+      ],
+      "avg_s": [
+        [
+          "",
+          0.50315
+        ]
+      ],
+      "cost_per_h": [
+        [
+          "",
+          6.81321
+        ]
+      ],
+      "tokens_s": [
+        [
+          "input",
+          416.8
+        ],
+        [
+          "output",
+          221.76364
+        ]
+      ],
+      "rps_by_instance": [
+        [
+          "172.19.0.7:8000",
+          1.8
+        ],
+        [
+          "172.19.0.6:8000",
+          1.8
+        ],
+        [
+          "172.19.0.9:8000",
+          1.74545
+        ]
+      ],
+      "up": [
+        [
+          "172.19.0.7:8000",
+          1.0
+        ],
+        [
+          "172.19.0.6:8000",
+          1.0
+        ],
+        [
+          "172.19.0.9:8000",
+          1.0
+        ]
+      ]
+    },
+    "D": {
+      "rps": [
+        [
+          "",
+          4.59244
+        ]
+      ],
+      "err_rate": [
+        [
+          "",
+          0.00423
+        ]
+      ],
+      "p95_s": [
+        [
+          "",
+          0.29162
+        ]
+      ],
+      "avg_s": [
+        [
+          "",
+          0.2306
+        ]
+      ],
+      "cost_per_h": [
+        [
+          "",
+          6.80932
+        ]
+      ],
+      "tokens_s": [
+        [
+          "input",
+          362.83164
+        ],
+        [
+          "output",
+          193.45449
+        ]
+      ],
+      "rps_by_instance": [
+        [
+          "172.19.0.7:8000",
+          2.09091
+        ],
+        [
+          "172.19.0.6:8000",
+          0.62736
+        ],
+        [
+          "172.19.0.9:8000",
+          1.87397
+        ]
+      ],
+      "up": [
+        [
+          "172.19.0.7:8000",
+          1.0
+        ],
+        [
+          "172.19.0.6:8000",
+          0.0
+        ],
+        [
+          "172.19.0.9:8000",
+          1.0
+        ]
+      ]
+    },
+    "E": {
+      "rps": [
+        [
+          "",
+          6.16364
+        ]
+      ],
+      "err_rate": [
+        [
+          "",
+          0.0118
+        ]
+      ],
+      "p95_s": [
+        [
+          "",
+          0.22625
+        ]
+      ],
+      "avg_s": [
+        [
+          "",
+          0.22161
+        ]
+      ],
+      "cost_per_h": [
+        [
+          "",
+          0.50004
+        ]
+      ],
+      "tokens_s": [
+        [
+          "input",
+          222.32727
+        ],
+        [
+          "output",
+          120.32727
+        ]
+      ],
+      "rps_by_instance": [
+        [
+          "172.19.0.7:8000",
+          2.09091
+        ],
+        [
+          "172.19.0.6:8000",
+          2.07273
+        ],
+        [
+          "172.19.0.9:8000",
+          2.0
+        ]
+      ],
+      "up": [
+        [
+          "172.19.0.7:8000",
+          1.0
+        ],
+        [
+          "172.19.0.6:8000",
+          1.0
+        ],
+        [
+          "172.19.0.9:8000",
+          1.0
+        ]
+      ]
+    }
+  },
+  "A": {
+    "alert": "AgentHighErrorRate",
+    "firing_after_s": 80,
+    "pending_after_s": 20
+  },
+  "B": {
+    "alert": "AgentHighLatencyP95",
+    "firing_after_s": 145,
+    "pending_after_s": 25
+  },
+  "alerts_during_AB": [
+    [
+      "AgentHighErrorRate",
+      "firing"
+    ],
+    [
+      "AgentHighLatencyP95",
+      "firing"
+    ]
+  ],
+  "slow_trace": {
+    "trace_id": "b3402186e8fbbc11849091f8b0c845e7",
+    "total_ms": 1721.6,
+    "spans": [
+      {
+        "trace_id": "b3402186e8fbbc11849091f8b0c845e7",
+        "name": "POST /ask",
+        "ms": 1721.6,
+        "status": {},
+        "events": [],
+        "attrs": {
+          "http.flavor": "1.1",
+          "http.host": "172.19.0.9:8000",
+          "http.method": "POST",
+          "http.route": "/ask",
+          "http.scheme": "http",
+          "http.server_name": "nginx",
+          "http.status_code": "200",
+          "http.target": "/ask",
+          "http.url": "http://nginx/ask",
+          "http.user_agent": "python-requests/2.34.2",
+          "net.host.port": "8000",
+          "net.peer.ip": "172.19.0.5",
+          "net.peer.port": "58552"
+        }
+      },
+      {
+        "trace_id": "b3402186e8fbbc11849091f8b0c845e7",
+        "name": "agent.run",
+        "ms": 1719.7,
+        "status": {},
+        "events": [],
+        "attrs": {
+          "agent.question.length": "54",
+          "agent.version": "v2"
+        }
+      },
+      {
+        "trace_id": "b3402186e8fbbc11849091f8b0c845e7",
+        "name": "chat mock-llm-small",
+        "ms": 1695.0,
+        "status": {},
+        "events": [],
+        "attrs": {
+          "gen_ai.operation.name": "chat",
+          "gen_ai.provider.name": "mock",
+          "gen_ai.request.model": "mock-llm-small",
+          "gen_ai.usage.input_tokens": "95",
+          "gen_ai.usage.output_tokens": "55",
+          "llm.cost_usd": 4.7249999999999997e-05
+        }
+      },
+      {
+        "trace_id": "b3402186e8fbbc11849091f8b0c845e7",
+        "name": "agent.retrieve_context",
+        "ms": 24.5,
+        "status": {},
+        "events": [],
+        "attrs": {
+          "retrieval.documents": "1"
+        }
+      }
+    ],
+    "log_lines": [
+      "{\"ts\": \"2026-11-26T08:20:54.390360+00:00\", \"level\": \"INFO\", \"service\": \"observable-agent\", \"instance\": \"b438a7bdfce1\", \"event\": \"llm_call\", \"trace_id\": \"b3402186e8fbbc11849091f8b0c845e7\", \"span_id\": \"bb935e14af711bc7\", \"request_id\": \"4d2b2b2decb9\", \"model\": \"mock-llm-small\", \"agent_version\": \"v2\", \"input_tokens\": 95, \"output_tokens\": 55, \"cost_usd\": 4.7e-05, \"llm_ms\": 1694.3}",
+      "{\"ts\": \"2026-11-26T08:20:54.390700+00:00\", \"level\": \"INFO\", \"service\": \"observable-agent\", \"instance\": \"b438a7bdfce1\", \"event\": \"http_request\", \"trace_id\": \"b3402186e8fbbc11849091f8b0c845e7\", \"span_id\": \"bb935e14af711bc7\", \"request_id\": \"4d2b2b2decb9\", \"method\": \"POST\", \"route\": \"/ask\", \"status\": 200, \"ms\": 1721.2}"
+    ]
+  },
+  "error_trace": {
+    "trace_id": "d0ae4e9191bcdf77a93c93efe4f50679",
+    "total_ms": 856.2,
+    "spans": [
+      {
+        "trace_id": "d0ae4e9191bcdf77a93c93efe4f50679",
+        "name": "POST /ask",
+        "ms": 856.2,
+        "status": {
+          "code": 2
+        },
+        "events": [],
+        "attrs": {
+          "http.flavor": "1.1",
+          "http.host": "172.19.0.9:8000",
+          "http.method": "POST",
+          "http.route": "/ask",
+          "http.scheme": "http",
+          "http.server_name": "nginx",
+          "http.status_code": "503",
+          "http.target": "/ask",
+          "http.url": "http://nginx/ask",
+          "http.user_agent": "python-requests/2.34.2",
+          "net.host.port": "8000",
+          "net.peer.ip": "172.19.0.5",
+          "net.peer.port": "57294"
+        }
+      },
+      {
+        "trace_id": "d0ae4e9191bcdf77a93c93efe4f50679",
+        "name": "agent.run",
+        "ms": 852.9,
+        "status": {
+          "message": "LLMError: Upstream LLM error: 503 Service Unavailable (mock)",
+          "code": 2
+        },
+        "events": [
+          "exception"
+        ],
+        "attrs": {
+          "agent.question.length": "38",
+          "agent.version": "v2"
+        }
+      },
+      {
+        "trace_id": "d0ae4e9191bcdf77a93c93efe4f50679",
+        "name": "chat mock-llm-small",
+        "ms": 833.9,
+        "status": {
+          "message": "LLMError: Upstream LLM error: 503 Service Unavailable (mock)",
+          "code": 2
+        },
+        "events": [
+          "exception"
+        ],
+        "attrs": {
+          "error.type": "upstream_unavailable",
+          "gen_ai.operation.name": "chat",
+          "gen_ai.provider.name": "mock",
+          "gen_ai.request.model": "mock-llm-small"
+        }
+      },
+      {
+        "trace_id": "d0ae4e9191bcdf77a93c93efe4f50679",
+        "name": "agent.retrieve_context",
+        "ms": 17.7,
+        "status": {},
+        "events": [],
+        "attrs": {
+          "retrieval.documents": "1"
+        }
+      }
+    ],
+    "log_lines": [
+      "{\"ts\": \"2026-11-26T08:17:54.386734+00:00\", \"level\": \"INFO\", \"service\": \"observable-agent\", \"instance\": \"b438a7bdfce1\", \"event\": \"llm_error\", \"trace_id\": \"d0ae4e9191bcdf77a93c93efe4f50679\", \"span_id\": \"18063f74c7db6671\", \"request_id\": \"9fc701fb42ff\", \"error\": \"Upstream LLM error: 503 Service Unavailable (mock)\"}",
+      "{\"ts\": \"2026-11-26T08:17:54.387134+00:00\", \"level\": \"INFO\", \"service\": \"observable-agent\", \"instance\": \"b438a7bdfce1\", \"event\": \"http_request\", \"trace_id\": \"d0ae4e9191bcdf77a93c93efe4f50679\", \"span_id\": \"18063f74c7db6671\", \"request_id\": \"9fc701fb42ff\", \"method\": \"POST\", \"route\": \"/ask\", \"status\": 503, \"ms\": 855.5}"
+    ]
+  },
+  "C": {
+    "alert": "LLMCostBurnRateHigh",
+    "firing_after_s": 175,
+    "pending_after_s": 55
+  },
+  "D": {
+    "alert": "AgentInstanceDown",
+    "firing_after_s": 40,
+    "pending_after_s": 10
+  },
+  "E": {
+    "alerts_after_180s": [],
+    "retrieval_hit_ratio": []
+  }
+}

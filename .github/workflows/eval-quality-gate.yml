@@ -1,0 +1,45 @@
+# Exercise 7.3 — Quality gate: chặn merge khi eval tệ đi so với baseline.
+# run_eval.py trả exit code 1 khi accuracy < ngưỡng hoặc có câu bị regression
+# → step fail → job fail → branch protection ("Require status checks") không cho merge.
+name: eval-quality-gate
+
+on:
+  pull_request:
+    paths:
+      - "06-lab-complete/benchmark-observability/develop/**"
+
+jobs:
+  eval:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: 06-lab-complete/benchmark-observability/develop
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Start agent v2
+        run: |
+          # tắt lỗi/độ chậm giả lập để gate chỉ đo chất lượng, không bị flaky
+          MOCK_ERROR_RATE=0 MOCK_SLOW_RATE=0 AGENT_VERSION=v2 PORT=8002 python app.py > agent.log 2>&1 &
+          for i in $(seq 1 30); do curl -sf http://localhost:8002/health && break; sleep 1; done
+
+      - name: Eval + quality gate (so với baseline đã commit)
+        run: |
+          python eval/run_eval.py --url http://localhost:8002 \
+            --min-accuracy 1.0 \
+            --baseline reports/eval_v2_fixed.json \
+            --out reports/eval_ci.json
+
+      - name: Upload eval report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: eval-report
+          path: 06-lab-complete/benchmark-observability/develop/reports/eval_ci.json

@@ -1,0 +1,32 @@
+# Render Blueprint (Render đọc file này ở gốc repo) — deploy agent Part 6 trong 06-lab-complete/
+# Bản giống hệt nằm ở 06-lab-complete/render.yaml (script chấm đọc bản đó).
+services:
+  - type: web
+    name: production-ai-agent
+    runtime: docker
+    rootDir: 06-lab-complete
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: ENVIRONMENT
+        value: production
+      - key: AGENT_API_KEY
+        generateValue: true
+      - key: RATE_LIMIT_PER_MINUTE
+        value: "10"
+      - key: DAILY_BUDGET_USD
+        value: "1.0"
+      - key: MONTHLY_BUDGET_USD
+        value: "10.0"
+      - key: REDIS_URL
+        fromService:
+          type: keyvalue
+          name: agent-redis
+          property: connectionString
+
+  - type: keyvalue
+    name: agent-redis
+    plan: free
+    ipAllowList: []

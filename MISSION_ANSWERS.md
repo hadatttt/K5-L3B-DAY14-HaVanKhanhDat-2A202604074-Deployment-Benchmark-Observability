@@ -1,6 +1,6 @@
 # Day 14 Lab - Mission Answers
 
-**Học viên:** Hà Văn Khánh Đạt · **Lớp:** K5-L3B · **Ngày làm:** 2026-11-26
+**Lớp:** K5-L3B · **Ngày làm:** 2026-11-26
 **Môi trường:** Windows 11 + WSL2 (Ubuntu 22.04, Python 3.11.18), Docker Desktop 29.9.3
 
 ---
@@ -290,8 +290,9 @@ k5-day14-scaling-redis-1   Up (healthy)            6379/tcp
 X-Served-By: 172.19.0.4:8000
 X-Served-By: 172.19.0.3:8000
 X-Served-By: 172.19.0.4:8000
+X-Served-By: 172.19.0.3:8000
+X-Served-By: 172.19.0.4:8000
 X-Served-By: 172.19.0.3:8000   (round-robin luân phiên)
-...
 ```
 
 Output `test_stateless.py`:
@@ -372,13 +373,34 @@ Một vài dòng chi tiết đáng chú ý: image **273 MB**; `429 sau 5 request
 | Docker | 2 stage (`python:3.11-slim`): builder cài vào `/opt/venv`, runtime chỉ copy venv + `app/` + `utils/`, user `app` non-root, `HEALTHCHECK` bằng Python urllib, `CMD ["sh","-c","exec uvicorn ... --port ${PORT:-8000}"]` để uvicorn là PID 1 |
 | Compose | `agent` build từ Dockerfile, `REDIS_URL=redis://redis:6379/0`, `depends_on: redis (service_healthy)`, `.env` với `required: false`; `redis:7-alpine` có healthcheck + volume AOF |
 
+**Xử lý lỗi (input sai → mã lỗi rõ ràng, không lộ stack trace)** — chạy local với key và Redis thật:
+
+```text
+question rỗng            → 422 {"detail":[{"type":"string_too_short","loc":["body","question"],"msg":"String should have at least 1 character",...}]}
+thiếu field question     → 422 {"detail":[{"type":"missing","loc":["body","question"],"msg":"Field required",...}]}
+JSON hỏng                → 422 {"detail":[{"type":"json_invalid","loc":["body",12],"msg":"JSON decode error",...}]}
+question > 2000 ký tự    → 422 "String should have at most 2000 characters"
+question là số (123)     → 422 "Input should be a valid string"
+không key + body sai     → 401 {"detail":"Invalid or missing API key"}   (chặn auth trước, không lộ schema)
+GET /ask                 → 405 {"detail":"Method Not Allowed"}
+route không tồn tại      → 404 {"detail":"Not Found"}
+grep -c Traceback log    → 0
+```
+
+Lỗi không lường trước được middleware bắt lại, ghi log JSON `unhandled_error` và trả `500 {"detail":"Internal server error"}`, không gửi traceback cho client. Redis lỗi khi rate limit / cost guard → `503` thay vì 500.
+
 ---
 
 ## AI log
 
-Mình dùng Claude Code (trợ lý AI) trong bài này:
+Công cụ: **Claude Code** (agent chạy lệnh trên máy mình, trong WSL2). Mọi số đo đều từ lệnh đã chạy thật; file JSON/CSV/ảnh nộp kèm là output gốc.
 
-- **Setup:** cài WSL2 Ubuntu 22.04 (bản Ubuntu mới nhất không chạy được với WSL 2.4.12 trên máy), Python 3.11, bật Docker WSL integration.
-- **Part 6:** AI viết các phần TODO trong `06-lab-complete/` (config, auth, Redis rate limiter bằng Lua script, cost guard, log JSON, lifespan, Dockerfile multi-stage, compose, deploy config). Mình chạy `check_production_ready.py` bản đầy đủ để xác nhận.
-- **Part 1–5, 7:** AI chạy các lệnh trong đề và ghi lại output thật; số liệu trong file này và `BENCHMARK_REPORT.md` lấy từ output/JSON/CSV đó, không ước lượng.
-- **Phần mình tự làm:** đăng nhập và deploy lên cloud, đặt secret trên nền tảng, kiểm tra lại các câu trả lời.
+| # | Hỏi / giao việc gì | Nhận được gì | Mình kiểm tra / sửa thế nào |
+|---|---|---|---|
+| 1 | Cài môi trường chạy lab trên Windows | Cài WSL2; bản `Ubuntu` mới nhất lỗi `Wsl/Service/E_UNEXPECTED` (WSL 2.4.12, `wsl --update` bị 403) nên chuyển sang **Ubuntu 22.04**, Python 3.11.18 từ deadsnakes, bật Docker WSL integration | `python -c "import os; print(os.name)"` in `posix`; `docker run hello-world` chạy trong Ubuntu |
+| 2 | Viết các TODO của Part 6 | Code trong `06-lab-complete/app/` + Dockerfile, compose, `.dockerignore`, `.env.example`, `railway.toml`, `render.yaml`. Rate limiter dùng Lua script để atomic giữa 2 worker; cost guard theo ngày/tháng trong Redis | Chạy `check_production_ready.py` bản đầy đủ (có Docker) trong WSL: lần đầu bản khung 0/12, sau khi viết **PASS 12/12, 43/43**. Tự thử thêm các input sai (phần Xử lý lỗi ở trên) |
+| 3 | Chạy Part 1, 2, 4, 5 và ghi output | Output `curl -i`, kích thước image, test stateless | Đối chiếu từng output với yêu cầu đề (401/403/200/429, 503 khi chưa ready…); che token JWT trước khi dán |
+| 4 | Load test + eval Part 7 | 7 file `load_*.json`, `eval_v1/v2.json`; v2 sai `security-02`, `scaling-03` → AI thêm 2 entry `KNOWLEDGE_BASE` | Chạy lại eval với `--min-accuracy 1.0 --baseline reports/eval_v2.json` → 23/23, 0 regression, exit 0; eval v1 với baseline v2 → exit 1 |
+| 5 | Dựng stack observability + chaos A–E | Stack lỗi `No module named 'uvicorn'` → sửa `PYTHONUSERBASE` trong `production/Dockerfile`. Lần đo scale đầu sai vì `compose run` reset về 2 replica → đo lại với `--no-deps` | Đối chiếu số instance bằng `sum(up{job="agent"})` trên Prometheus trước/sau mỗi lần chạy; xem lại từng ảnh Grafana/Jaeger/Prometheus |
+| 6 | Hướng dẫn deploy Render | `render.yaml` ở gốc repo (agent Docker + Key Value), script CP6 nhập key ẩn | **Mình tự** đăng nhập Render, apply Blueprint, lấy `AGENT_API_KEY` trên dashboard, chạy 4 lệnh CP6 (200/200/401/200) và rate limit (429), chụp 3 ảnh deploy |
+| 7 | Soát bài theo RUBRIC/INSTRUCTOR_GUIDE | Bổ sung phần xử lý lỗi, sửa AI log, kiểm tra repo public | Gọi repo không đăng nhập (GitHub API: `private: false`, trang repo trả 200); `git log --all -- '*.env'` không có gì |
